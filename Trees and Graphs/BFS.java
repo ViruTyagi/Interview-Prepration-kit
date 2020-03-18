@@ -3,21 +3,23 @@ import java.util.*;
 class Graph{
 	int V;
     LinkedList<Integer> addList[];
+    int[] prev; 
 
 	Graph(int V){
 		this.V = V;
 		addList = new LinkedList[V];
 		for(int i =0;i<V;i++){
 			addList[i] = new LinkedList();
-		}
+        }
+        prev = new int[V];
+        Arrays.fill(prev,-1);
 	}
 
 	void addEdge(int src,int dest){
 		addList[src].add(dest);
 		addList[dest].add(src);
     }
-
-    void bfs(int src){
+    int[] solve(int src){
         Queue<Integer> queue = new LinkedList<Integer>();
         boolean[] visited = new boolean[V];
         visited[src] = true;
@@ -29,11 +31,35 @@ class Graph{
                 if(!visited[crawl]){
                     queue.add(crawl);
                     visited[crawl]=true;
-                    System.out.print(crawl + " ");
+                    prev[crawl] = node;
                 }
             }
         }
+        return prev;
+    }
+    String bfs(int src,int end){
+        prev = solve(src);
+        for(int i=0;i<prev.length;i++){
+            System.out.print(prev[i] + " ");
+        }
+        System.out.println();
+        System.out.print(reconstructPath(src, end, prev));
+        return "lol";
+    }
 
+    String reconstructPath(int src,int end,int[] prev){
+        String path = "";
+        for(int at = end;at !=-1;at=prev[at]){
+            path = Integer.toString(at) + path;
+        }
+    
+        if(path.charAt(0) == Integer.toString(src).charAt(0)){
+            return path;
+        }else{
+            return "";
+        }
+
+        
     }
 }
 
@@ -58,6 +84,6 @@ class BFS {
      graph.addEdge(7, 3);
      graph.addEdge(3, 4);
      graph.addEdge(11, 7);
-	 graph.bfs(0);
+	 System.out.print(graph.bfs(0,6));
   }
 }
